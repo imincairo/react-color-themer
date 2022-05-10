@@ -1,0 +1,121 @@
+// setting up for SPA
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100vh;
+}
+
+body, #root {
+  height: 100%;
+  overflow: hidden;
+}
+
+@mixin breakpoints-min ($breakpoint) {
+  @if $breakpoint == 360 {
+    @media only screen and (min-width: 360px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 480 {
+    @media only screen and (min-width: 480px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 600 {
+    @media only screen and (min-width: 600px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 720 {
+    @media only screen and (min-width: 720px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 840 {
+    @media only screen and (min-width: 840px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 960 {
+    @media only screen and (min-width: 960px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 1080 {
+    @media only screen and (min-width: 1080px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 1200 {
+    @media only screen and (min-width: 1200px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 1320 {
+    @media only screen and (min-width: 1320px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 14440 {
+    @media only screen and (min-width: 1440px) {
+      @content;
+    }
+  }
+}
+
+@mixin breakpoints-max ($breakpoint) {
+  @if $breakpoint == 360 {
+    @media only screen and (max-width: 360px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 480 {
+    @media only screen and (max-width: 480px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 600 {
+    @media only screen and (max-width: 600px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 720 {
+    @media only screen and (max-width: 720px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 840 {
+    @media only screen and (max-width: 840px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 960 {
+    @media only screen and (max-width: 960px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 1080 {
+    @media only screen and (max-width: 1080px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 1200 {
+    @media only screen and (max-width: 1200px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 1320 {
+    @media only screen and (max-width: 1320px) {
+      @content;
+    }
+  }
+  @if $breakpoint == 14440 {
+    @media only screen and (max-width: 1440px) {
+      @content;
+    }
+  }
+}

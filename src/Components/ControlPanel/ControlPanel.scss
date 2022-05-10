@@ -1,0 +1,16 @@
+.ControlPanel {
+  border: 4px solid darkorange;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.ControlPanelButtons {
+  border: 2px solid darkcyan;
+
+  display: flex;
+
+  button {
+    border: 2px solid darkorchid;
+  }
+}

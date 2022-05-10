@@ -1,0 +1,13 @@
+@import 'index.scss';
+
+.ColorThemer {
+  border: 4px solid darkgreen;
+
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  h1,h2,h3,h4,h5 {
+    text-align: center;
+  }
+}
