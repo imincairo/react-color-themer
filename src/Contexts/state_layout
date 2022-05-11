@@ -1,0 +1,22 @@
+Color = {
+  Mode: 'HSL', 'RGB', etc,
+  Hue: number,
+  Saturation: number,
+  etc for chanels needed by Mode
+}
+
+Swatch = {
+  ID: crypto.randomUUID()
+  Color: Color
+}
+
+Palette = {
+  ID: crypto.randomUUID(),
+  ActiveSwatch: Swatch or 'No Swatch Active'
+}
+
+state = {
+  Palettes: [Palette,],
+  Swatches: { Palette.ID: [Swatch, ] },
+  ActivePalette: Palette or 'No Palette Active'
+}

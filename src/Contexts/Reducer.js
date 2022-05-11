@@ -1,96 +1,143 @@
-/*
-*   state = {Palettes: [],
-*            Swatches: [],
-*            ActivePalette: null,
-*   }
-*   Palettes = {
-*     ID: crypto.uuid,
-*     ActiveSwatch: null,
-*
-*   }
-*   Swatches = {
-*     ID: crypto.uuid,
-*     PaletteID: parent palette's ID,
-*     ColorMode: 'HSL', 'RGB', etc,
-*     Hue: number,
-*     Saturation: number,
-*     etc for all channels needed by color mode
-*   }
-*/
+// Reducer.js
 
+// helper Functions
 const getRandomInt = (min, max) => { //rndm int btwn min max-1
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max-min) + min);
 };
 
-// Swatch Functions
-const createNewSwatch = (colorMode, paletteID) => {
-  switch (colorMode) {
+// Color Functions
+const createColor = (mode) => {
+  switch (mode) {
     case 'HSL':
       return {
-        ID: crypto.randomUUID(),
-        PaletteID: paletteID,
+        Mode: 'HSL',
         Hue: getRandomInt(0, 361),
         Saturation: getRandomInt(0, 101),
-        Lightness: getRandomInt(0, 101),
+        Lightness: getRandomInt(0, 101)
       };
+
     default:
-      return "no such colorMode: " + colorMode;
+      return 'No such mode: ' + mode;
   }
+};
+
+// Swatch Functions
+const createSwatch = (color) => {
+  return {
+    ID: crypto.randomUUID(),
+    Color: !color ? 'No Color' : color,
+  };
+};
+
+const setActiveSwatch = (state, swatch, palette) => {
+  console.log(swatch);
+  console.log(palette);
+  return {
+    ...state,
+    ActiveSwatch: swatch,
+    ActivePalette: palette
+  };
+};
+
+const addSwatch = (state) => {
+  let newSwatch = createSwatch(createColor('HSL'));
+  return {
+    ...state,
+    Swatches: {
+      ...state.Swatches,
+      [state['ActivePalette']['ID']]: [
+        ...state.Swatches[state.ActivePalette.ID],
+        newSwatch
+      ]
+    }
+  };
+};
+
+const removeSwatch = (state) => {
+  return {
+    ...state,
+    Swatches: {
+      ...state.Swatches,
+      [state.ActivePalette.ID]: [
+        ...state.Swatches[state.ActivePalette.ID].filter(s =>
+          s.ID !== state.ActiveSwatch.ID)
+      ]
+    },
+    ActiveSwatch: 'No Swatch Active'
+  };
 };
 
 // Palette Functions
-const setActivePalette = (state, paletteID) => {
-  let activePalette = state.Palettes.find(p => p.ID === paletteID);
-  if (!activePalette) { activePalette = 'No Palette Active'};
-  state = {
-    ...state,
-    ActivePalette: activePalette
-  }
-  return state;
-};
-const createNewPalette = () => {
+const createPalette = () => {
   return {
     ID: crypto.randomUUID(),
-    ActiveSwatchID: null
   };
-}
-const addPalette = (state) => {
-  let newPalette = createNewPalette();
-  state = {...state,
-           Palettes: [...state.Palettes, newPalette]
-  }
-  // need to call after adding the new palette
-  state = setActivePalette(state, newPalette.ID);
-  return state;
-};
-const removePalette = (state) => {
-  console.log('removePalette()');
-  state = {
-    ...state,
-    Palettes: state.Palettes.filter(p =>
-      p.ID !== state.ActivePalette.ID
-    )
-  };
-  // call to change ActivePaletteID from the one removed
-  state = setActivePalette(state, state.ActivePaletteID);
-  return state;
 };
 
+const setActivePalette = (state, palette) => {
+  return {
+    ...state,
+    ActivePalette: palette,
+    ActiveSwatch: state.Swatches[palette.ID][0] ? 
+      state.Swatches[palette.ID][0] :
+      'No Swatch Active'
+  };
+};
+
+const addPalette = (state) => {
+  let newPalette = createPalette(createSwatch(createColor('HSL')));
+  return {
+    ...state,
+    Palettes: [
+      ...state.Palettes,
+      newPalette
+    ],
+    Swatches: {
+      ...state.Swatches,
+      [newPalette['ID']]: [createSwatch(createColor('HSL'))]
+
+    }
+  };
+};
+
+const removePalette = (state) => {
+  delete state.Swatches[state.ActivePalette.ID];
+
+  return {
+    ...state,
+    Palettes: [
+      ...state.Palettes.filter(p => p.ID !== state.ActivePalette.ID)
+    ],
+    Swatches: {...state.Swatches},
+    ActivePalette: 'No Palette Active',
+    ActiveSwatch: 'No Swatch Active'
+  };
+};
 
 // REDUCER
-export const Reducer = (state, action) => {
+export function Reducer(state, action) {
   switch (action.type) {
+    case 'setActiveSwatch':
+      console.log('setActiveSwatch');
+      return setActiveSwatch(state, action.swatch, action.palette);
+    case 'addSwatch':
+      console.log('addSwatch');
+      return addSwatch(state);
+    case 'removeSwatch':
+      console.log('removeSwatch');
+      return removeSwatch(state);
+
+    case 'setActivePalette':
+      console.log('setActivePalette');
+      return setActivePalette(state, action.palette);
     case 'addPalette':
       console.log('addPalette');
       return addPalette(state);
     case 'removePalette':
       console.log('removePalette');
       return removePalette(state);
-    case 'setActivePalette':
-      console.log('setActivePalette');
-      return setActivePalette(state, action.paletteID);
 
     default:
       return "no such action.type: " + action.type;
@@ -98,11 +145,13 @@ export const Reducer = (state, action) => {
 };
 
 // INITIAL STATE
-let initialPalette = createNewPalette();
-let initialSwatch = createNewSwatch('HSL', initialPalette.ID);
-initialPalette.ActiveSwatch = initialSwatch;
+const color = createColor('HSL');
+const swatch = createSwatch(color);
+const palette = createPalette(swatch);
+
 export const InitialState = {
-  Palettes: [initialPalette],
-  Swatches: [initialSwatch],
-  ActivePalette: initialPalette,
+  Palettes: [palette],
+  Swatches: {[palette['ID']]: [swatch]},
+  ActivePalette: palette,
+  ActiveSwatch: swatch
 };

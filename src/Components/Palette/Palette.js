@@ -1,13 +1,14 @@
 import React from "react";
 import './Palette.scss';
 import { StoreContext } from '../../Contexts/Store';
+import SwatchContainer from '../Swatch/SwatchContainer';
 
 
 const Palette = (props) => {
   const [state, dispatch] = React.useContext(StoreContext);
   const styles = {
     palette:{
-      border: props.ID === state.ActivePalette.ID ? 
+      border: props.palette.ID === state.ActivePalette.ID ? 
         "4px solid red" : null
     }
   };
@@ -16,13 +17,14 @@ const Palette = (props) => {
     <div className="Palette"
       onClick={ ()=> dispatch({
         type: 'setActivePalette',
-        paletteID: props.ID
+        palette: props.palette
         })
       }
       style={styles.palette}
     >
       <h3>Palette</h3>
-      <p>ID: { props.ID.slice(0,6) }</p>
+      <p>ID: { props.palette.ID.slice(0,6) }</p>
+      <SwatchContainer palette={props.palette} />
     </div>
   );
 };
