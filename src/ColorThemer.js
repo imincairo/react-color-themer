@@ -1,7 +1,8 @@
 import React from "react";
 import './ColorThemer.scss';
 import { StoreContext } from './Contexts/Store';
-import ControlPanel from './Components/ControlPanel/ControlPanel';
+import PaletteControls from './Components/Controls/PaletteControls';
+import ColorControls from './Components/Controls/ColorControls';
 import PaletteContainer from './Components/Palette/PaletteContainer';
 
 
@@ -12,7 +13,10 @@ const ColorThemer = () => {
     <div className='ColorThemer'>
       <h1>ColorThemer</h1>
 
-      <ControlPanel />
+      <ColorControls />
+
+      <PaletteControls />
+
       <PaletteContainer />
 
     </div>

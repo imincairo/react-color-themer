@@ -1,9 +1,9 @@
 import React from "react";
 import { StoreContext } from '../../Contexts/Store';
-import './Sliders.scss';
+import './ColorControls.scss';
 
 
-const Sliders = () => {
+const ColorControls = () => {
   const [state, dispatch] = React.useContext(StoreContext);
 
   if (typeof(state.ActiveSwatch) == 'object') {
@@ -86,4 +86,4 @@ const Sliders = () => {
   }
 };
 
-export default Sliders;
+export default ColorControls;
