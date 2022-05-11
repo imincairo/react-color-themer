@@ -12,11 +12,11 @@ Swatch = {
 
 Palette = {
   ID: crypto.randomUUID(),
-  ActiveSwatch: Swatch or 'No Swatch Active'
 }
 
 state = {
   Palettes: [Palette,],
-  Swatches: { Palette.ID: [Swatch, ] },
+  Swatches: { Palette.ID: [Swatch, ], },
   ActivePalette: Palette or 'No Palette Active'
+  ActiveSwatch: Swatch or 'No Swatch Active'
 }

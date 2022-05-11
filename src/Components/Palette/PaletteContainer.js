@@ -9,8 +9,6 @@ const PalettesContainer = () => {
 
   return (
     <div className="PalettesContainer">
-      <h2>PalettesContainer</h2>
-
       { state.Palettes.sort((a, b) => {
           if (a.ID < b.ID) {
             return 1;

@@ -51,8 +51,6 @@ const createSwatch = (color) => {
 };
 
 const setActiveSwatch = (state, swatch, palette) => {
-  console.log(swatch);
-  console.log(palette);
   return {
     ...state,
     ActiveSwatch: swatch,
@@ -89,9 +87,9 @@ const removeSwatch = (state) => {
 };
 
 // Palette Functions
-const createPalette = () => {
+const createPalette = (name) => {
   return {
-    ID: crypto.randomUUID(),
+    ID: name,
   };
 };
 
@@ -105,8 +103,15 @@ const setActivePalette = (state, palette) => {
   };
 };
 
-const addPalette = (state) => {
-  let newPalette = createPalette(createSwatch(createColor('HSL')));
+const addPalette = (state, name) => {
+  if (state.Palettes.find(p => p.ID === name)) {
+    console.log('Palette exists with ID: ' + name);
+    return {...state};
+  }
+
+  let newPalette = createPalette(name);
+  let newSwatch = createSwatch(createColor('HSL'));
+
   return {
     ...state,
     Palettes: [
@@ -115,8 +120,7 @@ const addPalette = (state) => {
     ],
     Swatches: {
       ...state.Swatches,
-      [newPalette['ID']]: [createSwatch(createColor('HSL'))]
-
+      [newPalette['ID']]: [newSwatch]
     }
   };
 };
@@ -147,7 +151,7 @@ export function Reducer(state, action) {
       return setActiveSwatch(state, action.swatch, action.palette);
     case 'addSwatch':
       console.log('addSwatch');
-      return addSwatch(state);
+      return addSwatch(state, action.name);
     case 'removeSwatch':
       console.log('removeSwatch');
       return removeSwatch(state);
@@ -157,7 +161,7 @@ export function Reducer(state, action) {
       return setActivePalette(state, action.palette);
     case 'addPalette':
       console.log('addPalette');
-      return addPalette(state);
+      return addPalette(state, action.name);
     case 'removePalette':
       console.log('removePalette');
       return removePalette(state);
@@ -170,7 +174,7 @@ export function Reducer(state, action) {
 // INITIAL STATE
 const color = createColor('HSL');
 const swatch = createSwatch(color);
-const palette = createPalette(swatch);
+const palette = createPalette('Main');
 
 export const InitialState = {
   Palettes: [palette],

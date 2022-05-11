@@ -10,7 +10,6 @@ const SwatchContainer = (props) => {
 
   return (
     <div className="SwatchContainer">
-      <h4>SwatchContainer</h4>
       {
         state.Swatches[props.palette.ID].map(s =>
           <SwatchHSL

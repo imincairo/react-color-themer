@@ -14,16 +14,13 @@ const Palette = (props) => {
   };
 
   return (
-    <div className="Palette"
+    <div className="Palette" style={styles.palette}
       onClick={ ()=> dispatch({
         type: 'setActivePalette',
         palette: props.palette
-        })
-      }
-      style={styles.palette}
+      })}
     >
-      <h3>Palette</h3>
-      <p>ID: { props.palette.ID.slice(0,6) }</p>
+      <h3>Name: {props.palette.ID}</h3>
       <SwatchContainer palette={props.palette} />
     </div>
   );

@@ -33,7 +33,6 @@ const SwatchHSL = (props) => {
         })
       }}
     >
-      <h5>ID: {props.swatch.ID.slice(0,8)}</h5>
       <p>Hue: {props.swatch.Color.Hue}</p>
       <p>Saturation: {props.swatch.Color.Saturation}</p>
       <p>Lightness: {props.swatch.Color.Lightness}</p>
