@@ -11,3 +11,10 @@
     text-align: center;
   }
 }
+.ControlPanel {
+  @include breakpoints-min (600) {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+}

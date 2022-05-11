@@ -8,7 +8,7 @@ const ColorControls = () => {
 
   if (typeof(state.ActiveSwatch) == 'object') {
     return (
-      <div className="Sliders">
+      <div className="ColorControls">
         <div className="Channel">
           <label>Hue: {state.ActiveSwatch.Color.Hue}° </label>
           <input
@@ -57,7 +57,7 @@ const ColorControls = () => {
     );
   } else {
     return (
-      <div className="Sliders">
+      <div className="ColorControls">
         <div className="Channel">
           <label>Hue:  </label>
           <input

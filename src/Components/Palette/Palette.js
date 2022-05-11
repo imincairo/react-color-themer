@@ -2,6 +2,7 @@ import React from "react";
 import './Palette.scss';
 import { StoreContext } from '../../Contexts/Store';
 import SwatchControls from '../Controls/SwatchControls';
+import GenerateControls from '../Controls/GenerateControls';
 import SwatchContainer from '../Swatch/SwatchContainer';
 
 
@@ -16,6 +17,9 @@ const Palette = (props) => {
   const swatchControls = (props.palette.ID === state.ActivePalette.ID ?
     <div><SwatchControls /></div> : null
   );
+  const generateControls = (props.palette.ID === state.ActivePalette.ID ?
+    <div><GenerateControls /></div> : null
+  );
 
   return (
     <div className="Palette" style={styles.palette}
@@ -26,6 +30,7 @@ const Palette = (props) => {
     >
       <h3>Name: {props.palette.ID}</h3>
       {swatchControls}
+      {generateControls}
       <SwatchContainer palette={props.palette} />
     </div>
   );

@@ -1,6 +1,17 @@
-.Sliders {
+@import '../../index.scss';
+
+.ColorControls {
   display: flex;
   flex-direction: column;
+  padding-bottom: 1em;
+  @include breakpoints-max(600) {
+    border-bottom: .2em solid green;
+  }
+
+  @include breakpoints-min(600) {
+    width: 48%;
+    padding-bottom: .3em;
+  }
 
   .Channel {
     display: flex;
@@ -11,6 +22,9 @@
     }
     input {
       width: 15em;
+      @include breakpoints-min(600) {
+        width: 10em;
+      }
     }
 
     /********** Range Input Styles **********/

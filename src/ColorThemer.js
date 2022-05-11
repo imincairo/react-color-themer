@@ -13,9 +13,10 @@ const ColorThemer = () => {
     <div className='ColorThemer'>
       <h1>ColorThemer</h1>
 
-      <ColorControls />
-
-      <PaletteControls />
+      <div className="ControlPanel">
+        <ColorControls />
+        <PaletteControls />
+      </div>
 
       <PaletteContainer />
 

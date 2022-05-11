@@ -21,7 +21,7 @@ const PaletteControls = () => {
           <label>{state.ActivePalette.ID}</label>
         }
 
-        <button className="PanelButton"
+        <button
           onClick={ ()=> dispatch({type: 'removePalette'}) }
         >
           Remove Palette
@@ -34,7 +34,7 @@ const PaletteControls = () => {
             onChange={ (e) => {updateNewPaletteName(e)}}
           />
           <input 
-            type="submit" value="AddPalette" className="PanelButton"
+            type="submit" value="AddPalette"
             onClick={ (e)=> {
               e.preventDefault();
               dispatch({type: 'addPalette', name: newPaletteName}) } 
