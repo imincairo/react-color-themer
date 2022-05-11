@@ -50,23 +50,6 @@ const ControlPanel = () => {
           </div>
         </div>
 
-        <div className="SwatchControls">
-          <button className="PanelButton"
-            onClick={ ()=> dispatch({type: 'removeSwatch'}) }
-          >
-            Remove Swatch
-          </button>
-        
-          <button className="PanelButton"
-            onClick={ (e)=> {
-              e.preventDefault();
-              dispatch({type: 'addSwatch'}) } 
-            }
-          >
-            AddSwatch
-          </button>
-        </div>
-
       </div>
         
       <Sliders className="Sliders" />

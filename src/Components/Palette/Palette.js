@@ -1,6 +1,7 @@
 import React from "react";
 import './Palette.scss';
 import { StoreContext } from '../../Contexts/Store';
+import SwatchControls from '../Controls/SwatchControls';
 import SwatchContainer from '../Swatch/SwatchContainer';
 
 
@@ -12,6 +13,9 @@ const Palette = (props) => {
         "4px solid red" : null
     }
   };
+  const swatchControls = (props.palette.ID === state.ActivePalette.ID ?
+    <div><SwatchControls /></div> : null
+  );
 
   return (
     <div className="Palette" style={styles.palette}
@@ -21,6 +25,7 @@ const Palette = (props) => {
       })}
     >
       <h3>Name: {props.palette.ID}</h3>
+      {swatchControls}
       <SwatchContainer palette={props.palette} />
     </div>
   );
