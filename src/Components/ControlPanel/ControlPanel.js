@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import './ControlPanel.scss';
 import { StoreContext } from '../../Contexts/Store';
+import Sliders from './Sliders';
 
 
 const ControlPanel = () => {
@@ -45,6 +46,8 @@ const ControlPanel = () => {
           Remove Swatch
         </button>
       </div>
+
+      <Sliders />
     </div>
   );
 };

@@ -23,6 +23,25 @@ const createColor = (mode) => {
   }
 };
 
+const setColorChannel = (state, channel, value) => {
+  let otherSwatches = state.Swatches[state.ActivePalette.ID].filter(
+    s => s.ID !== state.ActiveSwatch.ID
+  );
+  let swatch = state.ActiveSwatch;
+  swatch.Color[channel] = value;
+  return {
+    ...state,
+    Swatches: {
+      ...state.Swatches,
+      [state.Swatches[state.ActivePalette.ID]]: [
+        ...otherSwatches,
+        swatch
+      ]
+    },
+    ActiveSwatch: swatch
+  };
+}
+
 // Swatch Functions
 const createSwatch = (color) => {
   return {
@@ -119,6 +138,10 @@ const removePalette = (state) => {
 // REDUCER
 export function Reducer(state, action) {
   switch (action.type) {
+    case 'setColorChannel':
+      console.log('setColorChannel');
+      return setColorChannel(state, action.channel, action.value);
+
     case 'setActiveSwatch':
       console.log('setActiveSwatch');
       return setActiveSwatch(state, action.swatch, action.palette);
