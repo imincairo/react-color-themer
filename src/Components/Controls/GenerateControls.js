@@ -6,18 +6,20 @@ import { StoreContext } from '../../Contexts/Store';
 const GenerateControls = () => {
   const [state, dispatch] = React.useContext(StoreContext);
   const [shadeCount, setShadeCount] = useState(1);
+  const [tintCount, setTintCount] = useState(1);
+  const [toneCount, setToneCount] = useState(1);
+  const [toneDirection, setToneDirection] = useState('down');
 
   return (
     <div className="GenerateControls">
       <div className="generateShades">
-        <label for="shadeCount">Count</label>
-        <input type="number" id="shadeCount" name="shadeCount"
+        <label htmlFor="shadeCount">Count</label>
+        <input type="number" id="shadeCount"
           min="0" max="10" value={shadeCount}
           onChange={ (event)=> {
             setShadeCount(event.target.valueAsNumber)
           }}
         />
-           
         <button 
           onClick={ (event)=> {
             event.stopPropagation();
@@ -28,24 +30,54 @@ const GenerateControls = () => {
         </button>
       </div>
 
-      <button
-        onClick={ (event)=> {
-          event.stopPropagation();
-          dispatch({type: 'generateTint'})}
-        }
-      >
-        generateTint
-      </button>
+      <div className="generateTints">
+        <label htmlFor="tintCount">Count</label>
+        <input type="number" id="tintCount"
+          min="0" max="10" value={tintCount}
+          onChange={ (event)=> {
+            setTintCount(event.target.valueAsNumber)
+          }}
+        />
+        <button
+          onClick={ (event)=> {
+            event.stopPropagation();
+            dispatch({type: 'generateTints', count: tintCount})}
+          }
+        >
+          generateTints
+        </button>
+      </div>
 
-      <button
-        onClick={ (event)=> {
-          event.stopPropagation();
-          dispatch({type: 'generateTone'})}
-        }
-      >
-        generateTone
-      </button
-      >
+      <div className="generateTones">
+        <label htmlFor="toneCount">Count</label>
+        <input type="number" id="toneCount"
+          min="0" max="10" value={toneCount}
+          onChange={ (event)=> {
+            setToneCount(event.target.valueAsNumber)
+          }}
+        />
+        <label htmlFor="toneDirection">Options</label>
+        <select id="toneDirection"
+          value={toneDirection}
+          onChange={ (event)=> setToneDirection(event.target.value) }
+        >
+          <option value="down">Down</option>
+          <option value="up">Up</option>
+          <option value="around">Around</option>
+        </select>
+        <button
+          onClick={ (event)=> {
+            event.stopPropagation();
+            dispatch({
+              type: 'generateTones',
+              count: toneCount,
+              direction: toneDirection
+            })}
+          }
+        >
+          generateTone
+        </button>
+      </div>
 
       <button
         onClick={ (event)=> {

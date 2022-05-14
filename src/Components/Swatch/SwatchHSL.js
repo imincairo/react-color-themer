@@ -1,7 +1,7 @@
 import React from 'react';
 import './Swatch.scss';
 import { StoreContext } from '../../Contexts/Store';
-import { createSwatchTextColor } from '../../Contexts/Reducer';
+import { createSwatchTextColor, roundColorValue } from '../../Contexts/Reducer';
 
 
 const getHSLColorString = (color) => (
@@ -38,7 +38,9 @@ const SwatchHSL = (props) => {
         }}
       >
         <p>Hue: {props.swatch.Color.Hue}</p>
-        <p>Saturation: {props.swatch.Color.Saturation}</p>
+        <p>Saturation: {
+          roundColorValue(props.swatch.Color.Saturation, 2)
+        }</p>
         <p>Lightness: {props.swatch.Color.Lightness}</p>
 
       </button>
