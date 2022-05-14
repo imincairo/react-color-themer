@@ -22,22 +22,22 @@ const SwatchHSL = (props) => {
   };
 
   return (
-    <button className="Swatch"
-      style={styles.swatch}
-      onClick={(e)=> {
-        e.stopPropagation();
-        dispatch({
-          type: 'setActiveSwatch',
-          swatch: props.swatch,
-          palette: props.palette
-        })
-      }}
-    >
-      <p>Hue: {props.swatch.Color.Hue}</p>
-      <p>Saturation: {props.swatch.Color.Saturation}</p>
-      <p>Lightness: {props.swatch.Color.Lightness}</p>
+      <button className="Swatch"
+        style={styles.swatch}
+        onClick={(e)=> {
+          e.stopPropagation();
+          dispatch({
+            type: 'setActiveSwatch',
+            swatch: props.swatch,
+            palette: props.palette
+          })
+        }}
+      >
+        <p>Hue: {props.swatch.Color.Hue}</p>
+        <p>Saturation: {props.swatch.Color.Saturation}</p>
+        <p>Lightness: {props.swatch.Color.Lightness}</p>
 
-    </button>
+      </button>
   );
 };
 

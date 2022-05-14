@@ -12,7 +12,7 @@ const ColorControls = () => {
         <div className="Channel">
           <label>Hue: {state.ActiveSwatch.Color.Hue}° </label>
           <input
-            type="range" min="0" max="360" step="1"
+            type="range" min="0" max="359" step="1"
             value={state.ActiveSwatch.Color.Hue}
             onChange={ (e)=> dispatch(
               {

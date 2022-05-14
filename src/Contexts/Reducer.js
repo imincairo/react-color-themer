@@ -1,5 +1,5 @@
 // Reducer.js
-
+//
 // helper Functions
 const getRandomInt = (min, max) => { //rndm int btwn min max-1
   min = Math.ceil(min);
@@ -13,7 +13,7 @@ const createColor = (mode) => {
     case 'HSL':
       return {
         Mode: 'HSL',
-        Hue: getRandomInt(0, 361),
+        Hue: getRandomInt(0, 360),
         Saturation: getRandomInt(0, 101),
         Lightness: getRandomInt(0, 101)
       };
@@ -42,6 +42,64 @@ const setColorChannel = (state, channel, value) => {
   };
 }
 
+const generateShade = (state) => { //Pure Color + Black
+  return state;
+};
+
+const generateTint = (state) => { //Pure Color + White
+  return state;
+};
+
+const generateTone = (state) => { //Pure Color + Gray
+  return state;
+};
+
+const createComplement = (color) => {
+  let newColor = color;
+  if (color.Mode === 'HSL') {
+    if (color.Hue > 180) {
+      newColor.Hue = color.Hue - 180
+    } else {
+      newColor.Hue = color.Hue + 180
+    }
+  }
+  return newColor;
+};
+
+const generateComplement = (state) => {
+  let newColor = createComplement(state.ActiveSwatch.Color);
+  console.log(newColor);
+  return state;
+};
+
+const createSplitComplements = (color) => {
+  return color;
+};
+
+const generateSplitComplements = (state) => {
+  return state;
+};
+
+const generateAnalogous = (state) => {
+  return state;
+};
+
+const generateTriadic = (state) => {
+  return state;
+};
+
+const generateTetradic = (state) => {
+  return state;
+};
+
+const generateSquare = (state) => {
+  return state;
+};
+
+const generateMonochromatic = (state) => {
+  return state;
+};
+
 // Swatch Functions
 const createSwatch = (color) => {
   return {
@@ -58,8 +116,12 @@ const setActiveSwatch = (state, swatch, palette) => {
   };
 };
 
-const addSwatch = (state) => {
+const addSwatch = (state, swatch) => {
   let newSwatch = createSwatch(createColor('HSL'));
+  if (swatch) {
+    newSwatch = swatch
+  }
+
   return {
     ...state,
     Swatches: {
@@ -87,9 +149,9 @@ const removeSwatch = (state) => {
 };
 
 // Palette Functions
-const createPalette = (name) => {
+const createPalette = () => {
   return {
-    ID: name,
+    ID: crypto.randomUUID(),
   };
 };
 
@@ -103,13 +165,8 @@ const setActivePalette = (state, palette) => {
   };
 };
 
-const addPalette = (state, name) => {
-  if (state.Palettes.find(p => p.ID === name)) {
-    console.log('Palette exists with ID: ' + name);
-    return {...state};
-  }
-
-  let newPalette = createPalette(name);
+const addPalette = (state) => {
+  let newPalette = createPalette();
   let newSwatch = createSwatch(createColor('HSL'));
 
   return {
@@ -139,12 +196,44 @@ const removePalette = (state) => {
   };
 };
 
+
+
 // REDUCER
 export function Reducer(state, action) {
   switch (action.type) {
     case 'setColorChannel':
       console.log('setColorChannel');
       return setColorChannel(state, action.channel, action.value);
+    case 'generateShade':
+      console.log('generateShade');
+      return generateShade(state);
+    case 'generateTint':
+      console.log('generateTint');
+      return generateTint(state);
+    case 'generateTone':
+      console.log('generateTone');
+      return generateTone(state);
+    case 'generateComplement':
+      console.log('generateComplement');
+      return generateComplement(state);
+    case 'generateSplitComplements':
+      console.log('generateSplitComplements');
+      return generateSplitComplements(state);
+    case 'generateAnalogous':
+      console.log('generateAnalogous');
+      return generateAnalogous(state);
+    case 'generateTriadic':
+      console.log('generateTriadic');
+      return generateTriadic(state);
+    case 'generateTetradic':
+      console.log('generateTetradic');
+      return generateTetradic(state);
+    case 'generateSquare':
+      console.log('generateSquare');
+      return generateSquare(state);
+    case 'generateMonochromatic':
+      console.log('generateMonochromatic');
+      return generateMonochromatic(state);
 
     case 'setActiveSwatch':
       console.log('setActiveSwatch');
@@ -161,7 +250,7 @@ export function Reducer(state, action) {
       return setActivePalette(state, action.palette);
     case 'addPalette':
       console.log('addPalette');
-      return addPalette(state, action.name);
+      return addPalette(state);
     case 'removePalette':
       console.log('removePalette');
       return removePalette(state);
