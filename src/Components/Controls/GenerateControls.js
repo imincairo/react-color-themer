@@ -1,21 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import './GenerateControls.scss';
 import { StoreContext } from '../../Contexts/Store';
 
 
 const GenerateControls = () => {
   const [state, dispatch] = React.useContext(StoreContext);
+  const [shadeCount, setShadeCount] = useState(1);
 
   return (
     <div className="GenerateControls">
-      <button 
-        onClick={ (event)=> {
-          event.stopPropagation();
-          dispatch({type: 'generateShade'})}
-        }
-      >
-        generateShade
-      </button>
+      <div className="generateShades">
+        <label for="shadeCount">Count</label>
+        <input type="number" id="shadeCount" name="shadeCount"
+          min="0" max="10" value={shadeCount}
+          onChange={ (event)=> {
+            setShadeCount(event.target.valueAsNumber)
+          }}
+        />
+           
+        <button 
+          onClick={ (event)=> {
+            event.stopPropagation();
+            dispatch({type: 'generateShades', count: shadeCount})}
+          }
+        >
+          generateShades
+        </button>
+      </div>
 
       <button
         onClick={ (event)=> {

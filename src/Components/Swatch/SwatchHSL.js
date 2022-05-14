@@ -1,10 +1,13 @@
 import React from 'react';
 import './Swatch.scss';
 import { StoreContext } from '../../Contexts/Store';
+import { createSwatchTextColor } from '../../Contexts/Reducer';
 
 
-const getHSLColorString = (h,s,l) => (
-  "hsl(" + h + " " + s + "% " + l + "%)");
+const getHSLColorString = (color) => (
+  "hsl(" + color.Hue + "," +
+           color.Saturation + "%," + 
+           color.Lightness + "%)");
 
 
 const SwatchHSL = (props) => {
@@ -12,10 +15,11 @@ const SwatchHSL = (props) => {
 
   const styles = {
     swatch: {
+      color: getHSLColorString(
+        createSwatchTextColor(props.swatch.Color)
+      ),
       backgroundColor: getHSLColorString(
-        props.swatch.Color.Hue,
-        props.swatch.Color.Saturation,
-        props.swatch.Color.Lightness
+        props.swatch.Color
       ),
       border: props.swatch.ID === state.ActiveSwatch.ID ? "4px solid red" : null
     }

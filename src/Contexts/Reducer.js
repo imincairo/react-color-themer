@@ -1,5 +1,5 @@
 // Reducer.js
-//
+
 // helper Functions
 const getRandomInt = (min, max) => { //rndm int btwn min max-1
   min = Math.ceil(min);
@@ -8,14 +8,14 @@ const getRandomInt = (min, max) => { //rndm int btwn min max-1
 };
 
 // Color Functions
-const createColor = (mode) => {
+const createColor = (mode, color) => {
   switch (mode) {
     case 'HSL':
       return {
         Mode: 'HSL',
-        Hue: getRandomInt(0, 360),
-        Saturation: getRandomInt(0, 101),
-        Lightness: getRandomInt(0, 101)
+        Hue: getRandomInt(0, 361),
+        Saturation: 100,//getRandomInt(0, 101),
+        Lightness: 50//getRandomInt(0, 101)
       };
 
     default:
@@ -42,7 +42,34 @@ const setColorChannel = (state, channel, value) => {
   };
 }
 
-const generateShade = (state) => { //Pure Color + Black
+const createShade = (color, step) => {
+  let newColor = {...color};
+  switch (newColor.Mode) {
+    case 'HSL':
+      let newLightness = newColor.Lightness - step;
+      newLightness >= 0
+        ? newColor.Lightness = Number(newLightness.toFixed(2))
+        : newColor.Lightness = 0;
+      break;
+
+    default:
+      console.log('No such Mode: ' + color.Mode);
+  }
+
+  return newColor;
+};
+
+const generateShades = (state, count) => { //Pure Color + Black
+  let step = state.ActiveSwatch.Color.Lightness / count;
+  let startingColor = {...state.ActiveSwatch.Color};
+  let i = 1;
+  while (count > 0) {
+    let newColor = createShade(startingColor, step * i);
+    let newSwatch = createSwatch(newColor);
+    state = addSwatch(state, newSwatch);
+    count = count - 1;
+    i = i + 1;
+  }
   return state;
 };
 
@@ -54,21 +81,36 @@ const generateTone = (state) => { //Pure Color + Gray
   return state;
 };
 
+export const createSwatchTextColor = (color) => {
+  let newColor = createComplement(color);
+  newColor.Saturation = 100;//100 - color.Saturation;
+  newColor.Lightness = 100 - color.Lightness;
+  return newColor;
+};
+
 const createComplement = (color) => {
-  let newColor = color;
-  if (color.Mode === 'HSL') {
-    if (color.Hue > 180) {
-      newColor.Hue = color.Hue - 180
-    } else {
-      newColor.Hue = color.Hue + 180
-    }
+  let newColor = {...color};
+  switch (newColor.Mode) {
+    case 'HSL':
+      if (newColor.Hue > 180) {
+        newColor.Hue = color.Hue - 180;
+      } else {
+        newColor.Hue = color.Hue + 180;
+      }
+      break;
+
+    default:
+      console.log('No such Mode: ' + color.Mode);
   }
   return newColor;
 };
 
 const generateComplement = (state) => {
   let newColor = createComplement(state.ActiveSwatch.Color);
-  console.log(newColor);
+  //console.log(newColor);
+  let newSwatch = createSwatch(newColor);
+  //console.log(newSwatch);
+  state = addSwatch(state, newSwatch);
   return state;
 };
 
@@ -117,11 +159,14 @@ const setActiveSwatch = (state, swatch, palette) => {
 };
 
 const addSwatch = (state, swatch) => {
-  let newSwatch = createSwatch(createColor('HSL'));
-  if (swatch) {
-    newSwatch = swatch
-  }
+  let newSwatch = null;
 
+  if (swatch) {
+    newSwatch = swatch;
+  } else {
+    newSwatch = createSwatch(createColor('HSL'));
+  }
+  //console.log(newSwatch);
   return {
     ...state,
     Swatches: {
@@ -204,9 +249,9 @@ export function Reducer(state, action) {
     case 'setColorChannel':
       console.log('setColorChannel');
       return setColorChannel(state, action.channel, action.value);
-    case 'generateShade':
-      console.log('generateShade');
-      return generateShade(state);
+    case 'generateShades':
+      console.log('generateShades');
+      return generateShades(state, action.count);
     case 'generateTint':
       console.log('generateTint');
       return generateTint(state);

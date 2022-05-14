@@ -30,60 +30,60 @@
 
     /********** Range Input Styles **********/
     /*Range Reset*/
-    input[type="range"] {
-       -webkit-appearance: none;
-        appearance: none;
-        background: transparent;
-        cursor: pointer;
-        //width: 15rem;
-    }
+    //input[type="range"] {
+    //   -webkit-appearance: none;
+    //    appearance: none;
+    //    background: none;
+    //    cursor: pointer;
+    //    //width: 15rem;
+    //}
     /* Removes default focus */
-    input[type="range"]:focus {
-      outline: none;
-    }
+    // input[type="range"]:focus {
+    //   outline: none;
+    // }
     /***** Chrome, Safari, Opera and Edge Chromium styles *****/
     /* slider track */
-    input[type="range"]::-webkit-slider-runnable-track {
-       background-color: green;
-       border-radius: 0.5rem;
-       height: 0.6rem;  
-    }
+    // input[type="range"]::-webkit-slider-runnable-track {
+    //    background-color: green;
+    //    border-radius: 0.5rem;
+    //    height: 0.6rem;  
+    // }
     /* slider thumb */
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none; /* Override default look */
-       appearance: none;
-       margin-top: -4px; /* Centers thumb on the track */
-       /*custom styles*/
-       background-color: darkgrey;
-       height: 1.1rem;
-       width: .5rem;
-       border-radius: 5px;
-    }
-    input[type="range"]:focus::-webkit-slider-thumb {   
-      border: 1px solid black;
-      outline: 3px solid red;
-      outline-offset: 0.125rem; 
-    }
+    // input[type="range"]::-webkit-slider-thumb {
+    //   -webkit-appearance: none; /* Override default look */
+    //    appearance: none;
+    //    margin-top: -4px; /* Centers thumb on the track */
+    //    /*custom styles*/
+    //    background-color: darkgrey;
+    //    height: 1.1rem;
+    //    width: .5rem;
+    //    border-radius: 5px;
+    // }
+    // input[type="range"]:focus::-webkit-slider-thumb {   
+    //   border: 1px solid black;
+    //   outline: 3px solid red;
+    //   outline-offset: 0.125rem; 
+    // }
     /******** Firefox styles ********/
     /* slider track */
-    input[type="range"]::-moz-range-track {
-       background-color: green;
-       border-radius: 0.5rem;
-       height: 0.7rem;
-    }
+    // input[type="range"]::-moz-range-track {
+    //    background-color: green;
+    //    border-radius: 0.5rem;
+    //    height: 0.7rem;
+    // }
     /* slider thumb */
-    input[type="range"]::-moz-range-thumb {
-       border: none;
-       border-radius: 5px;
-       /*custom styles*/
-       background-color: darkgrey;
-       height: 1.3rem;
-       width: .7rem;
-    }
-    input[type="range"]:focus::-moz-range-thumb {
-      border: 1px solid black;
-      outline: 3px solid red;
-      outline-offset: 0.125rem; 
-    }
+    // input[type="range"]::-moz-range-thumb {
+    //    border: none;
+    //    border-radius: 5px;
+    //    /*custom styles*/
+    //    background-color: darkgrey;
+    //    height: 1.3rem;
+    //    width: .7rem;
+    // }
+    // input[type="range"]:focus::-moz-range-thumb {
+    //   border: 1px solid black;
+    //   outline: 3px solid red;
+    //   outline-offset: 0.125rem; 
+    // }
   }
 }
