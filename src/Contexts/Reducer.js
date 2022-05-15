@@ -7,6 +7,37 @@ const getRandomInt = (min, max) => { //rndm int btwn min max-1
   return Math.floor(Math.random() * (max-min) + min);
 };
 
+export const roundColorValue = (value, decimalPlaces) => {
+  return Number(value.toFixed(decimalPlaces));
+};
+
+export const createSwatchTextColor = (color) => {
+  let newColor = createComplement(color);
+  newColor.Saturation = 100;//100 - color.Saturation;
+  newColor.Lightness = 100 - color.Lightness;
+  return newColor;
+};
+
+const wrapValue = (value, min, max) => {
+  while (value > max) {
+    value -= max;
+  }
+  while (value < min) {
+    value += max;
+  }
+  return value; 
+};
+
+const sortSwatches = (swatches, channel, direction='ascending') => {
+  swatches.sort((a, b)=> {
+    let ret = 1;
+    if (a.Color[channel] > b.Color[channel]) { ret=1 } else {ret=-1};
+    direction === 'ascending' ? ret=ret : ret=ret*-1;
+    return ret;
+  });
+  return swatches;
+};
+
 // Color Functions
 const createColor = (mode, color) => {
   if (color) {
@@ -30,11 +61,6 @@ const createColor = (mode, color) => {
     }
   }
 };
-
-export const roundColorValue = (value, decimalPlaces) => {
-  return Number(value.toFixed(decimalPlaces));
-};
-
 const setColorChannel = (state, channel, value) => {
   let otherSwatches = state.Swatches[state.ActivePalette.ID].filter(
     s => s.ID !== state.ActiveSwatch.ID
@@ -70,7 +96,6 @@ const createShade = (color, step) => {
 
   return newColor;
 };
-
 const generateShades = (state, count) => { //Pure Color + Black
   let startingColor = {...state.ActiveSwatch.Color};
   if (startingColor.Lightness <= 0) { return state; };
@@ -85,7 +110,6 @@ const generateShades = (state, count) => { //Pure Color + Black
   }
   return state;
 };
-
 const createTint = (color, step) => {
   let newColor = {...color};
   switch (newColor.Mode) {
@@ -102,7 +126,6 @@ const createTint = (color, step) => {
 
   return newColor;
 };
-
 const generateTints = (state, count) => { //Pure Color + White
   let startingColor = {...state.ActiveSwatch.Color};
   if (startingColor.Lightness >= 100) { return state; };
@@ -117,7 +140,6 @@ const generateTints = (state, count) => { //Pure Color + White
   }
   return state;
 };
-
 const createTone = (color, step) => {
   let newColor = {...color};
   switch (newColor.Mode) {
@@ -131,10 +153,8 @@ const createTone = (color, step) => {
     default:
       console.log('No such Mode: ' + color.Mode);
   }
-
   return newColor;
 };
-
 const createTones = (color, count, step) => {
   let colors = [];
   let newColor = createTone(color, step);
@@ -154,7 +174,6 @@ const createTones = (color, count, step) => {
   console.log(colors);
   return colors;
 };
-
 const generateTones = (state, count, mode) => { //Pure Color + Gray
   let startingColor = {...state.ActiveSwatch.Color};
   let newColors = [];
@@ -185,40 +204,21 @@ const generateTones = (state, count, mode) => { //Pure Color + Gray
       console.log('No such mode: ' + mode);
       return state;
   }
-
   newColors.map(c => {
     let newSwatch = createSwatch(c);
     state = addSwatch(state, newSwatch);
   });
-
-  state.Swatches[state.ActivePalette.ID].sort((a, b)=> {
-    let ret = 1;
-    if (a.Color.Saturation > b.Color.Saturation) {
-      mode === 'down' ? ret = -1 : ret = 1;
-    } else {
-      mode === 'down' ? ret = 1 : ret = -1;
-    };
-    return ret;
-  });
+  state.Swatches[state.ActivePalette.ID] = sortSwatches(
+    state.Swatches[state.ActivePalette.ID], 'Saturation',
+    mode === 'down' ? 'descending' : 'ascending'
+  );
   return state;
 };
-
-export const createSwatchTextColor = (color) => {
-  let newColor = createComplement(color);
-  newColor.Saturation = 100;//100 - color.Saturation;
-  newColor.Lightness = 100 - color.Lightness;
-  return newColor;
-};
-
 const createComplement = (color) => {
   let newColor = {...color};
   switch (newColor.Mode) {
     case 'HSL':
-      if (newColor.Hue > 180) {
-        newColor.Hue = color.Hue - 180;
-      } else {
-        newColor.Hue = color.Hue + 180;
-      }
+      newColor.Hue = wrapValue(newColor.Hue + 180, 0, 360);
       break;
 
     default:
@@ -226,7 +226,6 @@ const createComplement = (color) => {
   }
   return newColor;
 };
-
 const generateComplement = (state) => {
   let newColor = createComplement(state.ActiveSwatch.Color);
   //console.log(newColor);
@@ -235,32 +234,182 @@ const generateComplement = (state) => {
   state = addSwatch(state, newSwatch);
   return state;
 };
+const createSplitComplements = (color, count, offset) => {
+  let newColors = [];
+  switch (color.Mode) {
+    case 'HSL':
+      let i = 1;
+      while (count > 0) {
+        newColors.push({
+          ...color,
+          Hue: wrapValue(color.Hue + 180 + (offset * i), 0, 360)
+        });
+        newColors.push({
+          ...color,
+          Hue: wrapValue(color.Hue + 180 - (offset * i), 0, 360)
+        });
+        i++; count--;
+      }
+      break;
 
-const createSplitComplements = (color) => {
-  return color;
+    default:
+      console.log('No such Mode: ' + color.Mode);
+  }
+  return newColors;
 };
-
-const generateSplitComplements = (state) => {
+const generateSplitComplements = (state, count, offset) => {
+  let newColors = createSplitComplements(
+    state.ActiveSwatch.Color, count, offset);
+  newColors.map(c => state = addSwatch(state, createSwatch(c)));
   return state;
 };
+const createAnalogous = (color, count, offset) => {
+  let newColors = [];
+  switch (color.Mode) {
+    case 'HSL':
+      let i = 1;
+      while (count > 0) {
+        newColors.push(
+          {...color, Hue: wrapValue(color.Hue + (offset * i), 0, 360)}
+        );
+        newColors.push(
+          {...color, Hue: wrapValue(color.Hue - (offset * i), 0, 360)}
+        );
+        i++; count--;
+      }
+      break;
 
-const generateAnalogous = (state) => {
+    default:
+      console.log('No such Mode: ' + color.Mode);
+  }
+  return newColors;
+};
+const generateAnalogous = (state, count, offset) => {
+  let newColors = createAnalogous(
+    state.ActiveSwatch.Color, count, offset);
+  newColors.map(c => state = addSwatch(state, createSwatch(c)));
+  state.Swatches[state.ActivePalette.ID] = sortSwatches(
+    state.Swatches[state.ActivePalette.ID], 'Hue'
+  );
   return state;
 };
+const createTriadic = (color) => {
+  let newColors = [{...color},{...color}];
+  switch (color.Mode) {
+    case 'HSL':
+      newColors[0].Hue = wrapValue(color.Hue + 120, 0, 360);
+      newColors[1].Hue = wrapValue(color.Hue - 120, 0, 360);
+      break;
 
+  default:
+    console.log("No such Mode: " + color.Mode);
+    newColors = [];
+  }
+  return newColors;
+};
 const generateTriadic = (state) => {
+  let newColors = createTriadic(state.ActiveSwatch.Color);
+  newColors.map(c => state = addSwatch(state, createSwatch(c)));
+  
   return state;
 };
+const createTetradic = (color, smallOffset) => {
+  let newColors = [{...color},{...color},{...color}];
+  switch (color.Mode) {
+    case 'HSL':
+      newColors[0].Hue = wrapValue(color.Hue + smallOffset, 0, 360);
+      newColors[1].Hue = wrapValue(color.Hue + 180, 0, 360);
+      newColors[2].Hue = wrapValue(color.Hue + 180 + smallOffset, 0, 360);
+      break;
 
-const generateTetradic = (state) => {
+  default:
+    console.log("No such Mode: " + color.Mode);
+    newColors = [];
+  }
+  return newColors;
+};
+const generateTetradic = (state, smallOffset) => {
+  let newColors = createTetradic(state.ActiveSwatch.Color, smallOffset);
+  newColors.map(c => state = addSwatch(state, createSwatch(c)));
   return state;
 };
+const createSquare = (color) => {
+  let newColors = [{...color},{...color},{...color}];
+  switch (color.Mode) {
+    case 'HSL':
+      newColors[0].Hue = wrapValue(color.Hue + 90, 0, 360);
+      newColors[1].Hue = wrapValue(color.Hue + 180, 0, 360);
+      newColors[2].Hue = wrapValue(color.Hue + 270, 0, 360);
+      break;
 
+  default:
+    console.log("No such Mode: " + color.Mode);
+    newColors = [];
+  }
+  return newColors;
+};
 const generateSquare = (state) => {
+  let newColors = createSquare(state.ActiveSwatch.Color);
+  newColors.map(c => state = addSwatch(state, createSwatch(c)));
   return state;
 };
+const createMonochromatic = (color, satStep, lightStep) => {
+  let newColor = {...color};
+  switch (newColor.Mode) {
+    case 'HSL':
+      let newSaturation = color.Saturation + satStep;
+      newColor.Saturation = wrapValue(newSaturation, 1, 100);
 
-const generateMonochromatic = (state) => {
+      let newLightness = color.Lightness + lightStep;
+      newColor.Lightness = wrapValue(newLightness, 1, 100);
+      break;
+
+    default:
+      console.log('No such Mode: ' + color.Mode);
+  }
+  return newColor;
+};
+const createMonochromatics = (color, count, satStep, lightStep) => {
+  let colors = [];
+  switch (color.Mode) {
+    case 'HSL':
+      let i = 1;
+      while ( count > 0 ) {
+        let newColor = createMonochromatic(
+          color, satStep * i, lightStep * i);
+        colors.push(newColor);
+        newColor = createMonochromatic(
+          color, satStep * -i, lightStep * -i);
+        colors.push(newColor);
+        count -= 2;
+        i++
+      };
+      break;
+
+    default:
+      console.log('No such Mode: ' + color.Mode);
+  }
+  //console.log(colors);
+  return colors;
+};
+const generateMonochromatics = (state, count, satScale, lightScale) => {
+  let startingColor = {...state.ActiveSwatch.Color};
+  let newColors = [];
+  
+  let satStep = 100 / count * satScale;
+  let lightStep = 100 / count * lightScale;
+
+  newColors = createMonochromatics(
+    startingColor, count, satStep, lightStep);
+
+  newColors.map(c => {
+    let newSwatch = createSwatch(c);
+    state = addSwatch(state, newSwatch);
+  });
+  state.Swatches[state.ActivePalette.ID] = sortSwatches(
+    state.Swatches[state.ActivePalette.ID], 'Lightness',
+    startingColor.Lightness > 50 ? 'descending' : 'ascending' 
+  );
   return state;
 };
 
@@ -271,7 +420,6 @@ const createSwatch = (color) => {
     Color: !color ? 'No Color' : color,
   };
 };
-
 const setActiveSwatch = (state, swatch, palette) => {
   return {
     ...state,
@@ -279,7 +427,6 @@ const setActiveSwatch = (state, swatch, palette) => {
     ActivePalette: palette
   };
 };
-
 const addSwatch = (state, swatch) => {
   let newSwatch = null;
 
@@ -300,7 +447,6 @@ const addSwatch = (state, swatch) => {
     }
   };
 };
-
 const removeSwatch = (state) => {
   return {
     ...state,
@@ -321,7 +467,6 @@ const createPalette = () => {
     ID: crypto.randomUUID(),
   };
 };
-
 const setActivePalette = (state, palette) => {
   return {
     ...state,
@@ -331,7 +476,6 @@ const setActivePalette = (state, palette) => {
       'No Swatch Active'
   };
 };
-
 const addPalette = (state) => {
   let newPalette = createPalette();
   let newSwatch = createSwatch(createColor('HSL'));
@@ -348,7 +492,6 @@ const addPalette = (state) => {
     }
   };
 };
-
 const removePalette = (state) => {
   delete state.Swatches[state.ActivePalette.ID];
 
@@ -362,7 +505,6 @@ const removePalette = (state) => {
     ActiveSwatch: 'No Swatch Active'
   };
 };
-
 
 
 // REDUCER
@@ -385,22 +527,23 @@ export function Reducer(state, action) {
       return generateComplement(state);
     case 'generateSplitComplements':
       console.log('generateSplitComplements');
-      return generateSplitComplements(state);
+      return generateSplitComplements(state, action.count, action.offset);
     case 'generateAnalogous':
       console.log('generateAnalogous');
-      return generateAnalogous(state);
+      return generateAnalogous(state, action.count, action.offset);
     case 'generateTriadic':
       console.log('generateTriadic');
       return generateTriadic(state);
     case 'generateTetradic':
       console.log('generateTetradic');
-      return generateTetradic(state);
+      return generateTetradic(state, action.smallOffset);
     case 'generateSquare':
       console.log('generateSquare');
       return generateSquare(state);
-    case 'generateMonochromatic':
-      console.log('generateMonochromatic');
-      return generateMonochromatic(state);
+    case 'generateMonochromatics':
+      console.log('generateMonochromatics');
+      return generateMonochromatics(
+        state, action.count, action.satScale, action.lightScale);
 
     case 'setActiveSwatch':
       console.log('setActiveSwatch');

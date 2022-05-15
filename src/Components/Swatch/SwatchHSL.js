@@ -41,7 +41,9 @@ const SwatchHSL = (props) => {
         <p>Saturation: {
           roundColorValue(props.swatch.Color.Saturation, 2)
         }</p>
-        <p>Lightness: {props.swatch.Color.Lightness}</p>
+        <p>Lightness: {
+          roundColorValue(props.swatch.Color.Lightness, 2)
+        }</p>
 
       </button>
   );
