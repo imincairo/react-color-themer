@@ -4,10 +4,6 @@ import { reducer } from './reducer';
 import { State, initialState } from './state';
 
 
-// interface Context {
-//   state: State;
-//   dispatch: React.Dispatch<ReducerActions>;
-// }
 type Context = [state:State, dispatch: React.Dispatch<ReducerActions>];
 
 export const StoreContext = React.createContext<Context>([

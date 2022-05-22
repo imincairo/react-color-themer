@@ -20,9 +20,21 @@ export const reducer = (state: State,
         ]
       };
     case Actions.RemovePalette:
-      return {...state};
+      console.log("RemovePalette");
+      return {
+        ...state,
+        Palettes: [
+          ...state.Palettes.filter(p =>
+            p.Name !== action.payload.paletteName
+          )
+        ],
+        ActivePalette: 'No Palette Active',
+      };
     case Actions.SetActivePalette:
-      return {...state};
+      return {
+        ...state,
+        ActivePalette: action.payload.paletteName
+      };
 
     default:
       return {...state};
