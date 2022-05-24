@@ -1,38 +1,47 @@
-import { useState } from "react";
+import * as React from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { SetStateAction } from 'react';
 
-const Names: Array<string> = ['Primary', 'Secondary', 'Surface',
+const NAMES: Array<string> = ['Primary', 'Secondary', 'Surface',
   'Background', 'Confirm', 'Cancel', 'Error colors', 'Type and Icon'];
 
-
-export interface NamerState {
-  index: number;
-  names: Array<string>;
-  name: string;
-  next?: () => NamerState;
+export interface Ret {
+  value: string;
+  callback: React.Dispatch<SetStateAction<string>>;
 }
 
+export const usePaletteNamer = (newName:string):Ret => {
+  const [names, setNames] = useState(NAMES);
+  const [name, setName] = useState(names[0]);
+  const [fromAddPalette, setFromAddPalette] = useState(newName);
+
+  //const toNamer = useCallback() => setFromAddPalette();
 
 
-export const usePaletteNamer = () => {
-  const [state, setState] = useState<NamerState>({
-    index: 0,
-    names: Names,
-    name: Names[0],
-  });
-
-  const handleNext = () => {
-    console.log("handleNext");
-    if (state.index < state.names.length - 1) {
-      state.index++;
-      state.name = state.names[state.index];
-
-    } else {
-      state.name = "Do you really need another?";
+  useEffect(() => {
+    // console.log('usePaletteNamer');
+    // console.log(name, fromAddPalette);
+    if (names.length < 1 ) {
+      setName('no more sugestions');
     }
-    return state;
-  };
+    //console.log("if", newName !in names );
+    if (newName !in names) {
+      setName(names[0]);
+    } else {
+      //console.log('names', names);
 
-  state.next = handleNext;
-
-  return state;
+     // for (let i of names) {console.log(i === fromAddPalette)}
+      const newnames = names.filter(n => n !== fromAddPalette);
+      //console.log(newnames);
+      setNames(newnames);
+      
+      //console.log('names', names);
+      if (newnames.length < 1) {
+        setName('no more sugestions');
+      } else {
+        setName(newnames[0]);
+      }
+    }
+  },[fromAddPalette]);
+  return {value:name, callback: setFromAddPalette};
 };

@@ -2,16 +2,18 @@ import * as React from 'react';
 import './AddPalette.scss';
 import { StoreContext } from '../../Store/context';
 import { Actions } from '../../Store/actions';
-import { usePaletteNamer, NamerState } from '../../Hooks/usePaletteNamer';
+import { usePaletteNamer, Ret } from '../../Hooks/usePaletteNamer';
 
 
 function AddPalette() {
-  const [namer, setNamer] = React.useState<NamerState>(usePaletteNamer());
-  const [name, setName] = React.useState(namer.name);
+  const {value:suggestedName, callback:setToNamer}:Ret = usePaletteNamer('');
+  const [name, setName] = React.useState(suggestedName);//'Primary');
+
   const [, dispatch] = React.useContext(StoreContext);
 
-  console.log(namer.name);
-
+  React.useEffect(() => {
+    setName(suggestedName);
+  },[suggestedName]);
 
   return (
     <div className="AddPalette">
@@ -26,8 +28,7 @@ function AddPalette() {
           type: Actions.AddPalette,
           payload: {paletteName: name}
         });
-        setNamer(namer.next!());
-        setName(namer.name);
+        setToNamer(name);
       }}>
         AddPalette
       </button>
