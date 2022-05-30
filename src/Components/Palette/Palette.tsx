@@ -1,50 +1,43 @@
-import * as React from 'react';
+import { IPalette } from '../../Store/Palette/state';
 import './Palette.scss';
-import ActiveSwatch from '../Swatch/ActiveSwatch';
-import InactiveSwatches from '../Swatch/InactiveSwatches';
-import RemovePalette from '../Controls/RemovePalette';
-import { Palette as P } from '../../Store/state';
-import { StoreContext } from '../../Store/context';
-import { Actions } from '../../Store/actions';
+//import { StoreProvider as SSP } from "../../Store/Swatch/context";
+//import Swatches from '../Swatch/Swatches';
+//import RemovePalette from './RemovePalette';
+//import { useContext } from 'react';
+//import { StoreContext } from '../../Store/Palette/context';
+//import { ActionTypes } from '../../Store/Palette/actions';
+
+type Props = { palette:IPalette };
 
 
-const Palette = (props: {palette: P}) => {
-  const [state, dispatch] = React.useContext(StoreContext);
-  const styles = {
-    active: {
-      border: "4px solid red",
-      opacity: "1"
-    },
-    inactive: {
-      border: "2px solid yellow",
-      opacity: "0.6"
-    }
-  }
-  let style = styles.inactive;
-  if (props.palette.Name === state.ActivePalette) {
-    style = styles.active
-  }
-
+const Palette = ({palette}:Props) => {
+  //const [palettesState, dispatch, ] = useContext(StoreContext);
+  //let active = palettesState.ActivePalette ? true : false;
+  // const style = {
+  //   border: active ? "4px solid red" : undefined,
+  // }
 
   return (
-    <div className="Palette"
-      style={style}
-      onClick={(e)=> {
-        e.stopPropagation();
-        dispatch({
-          type: Actions.SetActivePalette,
-          payload: { paletteName: props.palette.Name }
-        });
-    }}>
-      <p>{props.palette.Name}</p>
-      <div className='Swatches'>
-      <ActiveSwatch />
-      <InactiveSwatches />
+    <div className='Palette'>
+      <p>name: {palette.Name.Name}</p>
+    {/* <SSP paletteName={paletteName}>
+      <div className='Palette'
+        style={style}
+        onClick={(e) => {
+          e.stopPropagation();
+          dispatch({
+            type: ActionTypes.SetActivePalette,
+            payload: {paletteName: paletteName}
+          });
+        }}
+      >
+        <h3>Palette</h3>
+        <Swatches />
+        {active &&
+          <RemovePalette />
+        }
       </div>
-      { props.palette.Name === state.ActivePalette &&
-        <RemovePalette />
-      }
-
+    </SSP> */}
     </div>
   );
 }

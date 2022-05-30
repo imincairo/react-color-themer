@@ -1,20 +1,17 @@
-import * as React from 'react';
 import './App.scss';
-import PaletteContainer from './Components/Palette/PaletteContainer';
-import { StoreProvider } from './Store/context';
+import Palettes from './Components/Palette/Palettes';
+import { StoreProvider as PaletteProvider } 
+  from './Store/Palette/context';
 
 
 export const App = () => {
-
   return (
-    <StoreProvider>
-      <div className="App">
+    <div className="App">
+      <PaletteProvider>
         <h1>App</h1>
-      
-        <PaletteContainer />
-
-      </div>
-    </StoreProvider>
+        <Palettes />
+      </PaletteProvider>
+    </div>
   );
 }
 
