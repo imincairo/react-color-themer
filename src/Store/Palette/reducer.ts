@@ -24,7 +24,7 @@ const createPalette = (name:INameMap):IPalette => {
 };
 
 const addPalette = (state:IState, paletteName:INameMap):IState => {
-  if (state.Palettes.find(p => p.Name === paletteName)) {
+  if (state.Palettes.find(p => p.Name.Name === paletteName.Name)) {
     return state;
   } else 
   {

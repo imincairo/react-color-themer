@@ -1,0 +1,27 @@
+//import * as React from 'react';
+import './Palettes.scss';
+import { useContext } from "react";
+import { StoreContext as PContext} from "../../Store/Palette/context";
+import Palette from './Palette';
+import AddPallet from './AddPalette';
+
+
+const Palettes = () => {
+  const [paletteState, , ]
+    = useContext(PContext);
+
+  return (
+    <div className="Palettes">
+      <h2>Palettes</h2>
+      { paletteState.Palettes.map(p => 
+        <Palette 
+          key={p.Name}
+          paletteName={p.Name}
+        />
+      )}
+      <AddPallet />
+    </div>
+  );
+};
+
+export default Palettes;

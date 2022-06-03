@@ -1,0 +1,17 @@
+import './App.scss';
+import Palettes from './Components/Palette/Palettes';
+import { StoreProvider as PSP } from './Store/Palette/context';
+
+
+export const App = () => {
+  return (
+    <div className="App">
+      <PSP>
+        <h1>App</h1>
+        <Palettes />
+      </PSP>
+    </div>
+  );
+}
+
+export default App;
